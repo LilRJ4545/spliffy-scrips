@@ -6311,7 +6311,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://pastebin.com/raw/3Zsx3H51'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/LilRJ4545/spliffy-scrips/refs/heads/main/iy'))()")
 	end
 end)
 
