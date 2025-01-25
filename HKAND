@@ -5330,127 +5330,130 @@ cmd.add({"ctrlshiftlock", "ctrlsl"}, {"ctrlshiftlock (ctrlsl)", "Enables shift l
 	game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule.CameraModule.MouseLockController.BoundKeys.Value = "LeftControl,RightControl"
 end)
 
-	 cmd.add({"esp"}, {"esp", "ESP"}, function()
- local ReplicatedStorage = game:GetService("ReplicatedStorage")
- local Players = game:GetService("Players")
- local RunService = game:GetService("RunService")
- local LP = Players.LocalPlayer
- local roles
- function CreateAllHighlight(p)
-	 for i, v in pairs(game.Players:GetChildren()) do
-		 if v ~= LP and v.Character and not v.Character:FindFirstChild("Highlight") then
-			 Instance.new("Highlight", v.Character)           
-		 end
-	 end
- end
- function UpdateAllHighlights()
-	 for _, v in pairs(game.Players:GetChildren()) do
-		 if v ~= LP and v.Character and v.Character:FindFirstChild("Highlight") then
-			 Highlight = v.Character:FindFirstChild("Highlight")
-				 Highlight.FillColor = Color3.fromRGB(178, 34, 34)
-			 end
-		 end
-	 end
+cmd.add({"esp"}, {"esp", "ESP"}, function()
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local LP = Players.LocalPlayer
+    local roles
+    local ESPenabled = true -- Add a flag to track if ESP is enabled
+    local addedFunc = {}
 
-	 function CreateHighlight(p)
-		for i, v in pairs(p:GetChildren()) do
-			if v ~= LP and v.Character and not v.Character:FindFirstChild("Highlight") then
-				Instance.new("Highlight", v.Character)           
-			end
-		end
-	end
-	function UpdateHighlights(p)
-		for _, v in pairs(p:GetChildren()) do
-			if v ~= LP and v.Character and v.Character:FindFirstChild("Highlight") then
-				Highlight = v.Character:FindFirstChild("Highlight")
-					Highlight.FillColor = Color3.fromRGB(178, 34, 34)
-				end
-			end
-		end
+    -- Function to create highlight for all players
+    function CreateAllHighlight()
+        for _, player in pairs(Players:GetChildren()) do
+            if player ~= LP and player.Character and not player.Character:FindFirstChild("Highlight") then
+                Instance.new("Highlight", player.Character)           
+            end
+        end
+    end
 
- function IsAlive(Player)
-	 for i, v in pairs(roles) do
-		 if Player.Name == i then
-			 if not v.Killed and not v.Dead then
-				 return true
-			 else
-				 return false
-			 end
-		 end
-	 end
- end
- CreateAllHighlight()
-	 UpdateAllHighlights(game.Players)
+    -- Function to update the highlight for all players
+    function UpdateAllHighlights()
+        for _, player in pairs(Players:GetChildren()) do
+            if player ~= LP and player.Character and player.Character:FindFirstChild("Highlight") then
+                local Highlight = player.Character:FindFirstChild("Highlight")
+                Highlight.FillColor = Color3.fromRGB(178, 34, 34)
+            end
+        end
+    end
 
-	 Players = game.Players
-COREGUI = game.CoreGui
+    -- Function to create highlight for a specific player
+    function CreateHighlight(player)
+        if player.Character and not player.Character:FindFirstChild("Highlight") then
+            Instance.new("Highlight", player.Character)
+        end
+    end
 
-for i,plr in pairs(game.Players:GetChildren()) do
-for i,v in pairs(COREGUI:GetChildren()) do
-			if v.Name == plr.Name..'_ESP' then
-				v:Destroy()
-			end
-if plr.Character and plr.Name ~= Players.LocalPlayer.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
-			local ESPholder = Instance.new("Folder")
-			ESPholder.Name = plr.Name..'_ESP'
-			ESPholder.Parent = COREGUI
+    -- Function to update highlight for a specific player
+    function UpdateHighlights(player)
+        if player.Character and player.Character:FindFirstChild("Highlight") then
+            local Highlight = player.Character:FindFirstChild("Highlight")
+            Highlight.FillColor = Color3.fromRGB(178, 34, 34)
+        end
+    end
 
-			if plr.Character and plr.Character:FindFirstChild('Head') then
-				local BillboardGui = Instance.new("BillboardGui")
-				local TextLabel = Instance.new("TextLabel")
-				BillboardGui.Adornee = plr.Character.Head
-				BillboardGui.Name = plr.Name
-				BillboardGui.Parent = ESPholder
-				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
-				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
-				BillboardGui.AlwaysOnTop = true
-				TextLabel.Parent = BillboardGui
-				TextLabel.BackgroundTransparency = 1
-				TextLabel.Position = UDim2.new(0, 0, 0, -50)
-				TextLabel.Size = UDim2.new(0, 100, 0, 100)
-				TextLabel.Font = Enum.Font.SourceSansSemibold
-				TextLabel.TextSize = 17
-				TextLabel.TextColor3 = Color3.new(12, 4, 20)
-				TextLabel.TextStrokeTransparency = 0.3
-				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-				TextLabel.Text = '@'..plr.Name .. ' | ' .. plr.DisplayName .. ''
-				TextLabel.ZIndex = 10
-				local espLoopFunc
-				local teamChange
-				local addedFunc
-				end
-end
-end
+    -- Function to check if player is alive
+    function IsAlive(Player)
+        for i, v in pairs(roles) do
+            if Player.Name == i then
+                if not v.Killed and not v.Dead then
+                    return true
+                else
+                    return false
+                end
+            end
+        end
+    end
 
-	addedFunc = plr.CharacterAdded:Connect(function()
-		wait(2)
-		CreateHighlight(plr)
-		UpdateHighlights(plr)
-					if ESPenabled then
-						espLoopFunc:Disconnect()
-						teamChange:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until plr.Character.HumanoidRootPart and plr.Character:FindFirstChildOfClass("Humanoid")
-						ESP(plr)
-					else
-						addedFunc:Disconnect()
-					end
-				end)
-end
-	 end)
- 
-		 cmd.add({"unesp"}, {"unesp", "Disables esp"}, function()
-			addedFunc:Disconnect()
- for _, player in ipairs(game.Players:GetPlayers()) do
-	 local character = player.Character
-	 if character then
-		 local highlight = character:FindFirstChild("Highlight")
-		 if highlight then
-			 highlight:Destroy()
-		 end
-	 end
- end
- 
+    -- Function to handle player respawn and re-enable ESP
+    function SetupESPForPlayer(player)
+        if addedFunc[player] then addedFunc[player]:Disconnect() end -- Disconnect previous connection if it exists
+
+        addedFunc[player] = player.CharacterAdded:Connect(function()
+            wait(2) -- Wait for the character to fully load
+            CreateHighlight(player)
+            UpdateHighlights(player)
+
+            -- Reapply ESP if ESP is enabled
+            if ESPenabled then
+                local ESPholder = Instance.new("Folder")
+                ESPholder.Name = player.Name..'_ESP'
+                ESPholder.Parent = game.CoreGui
+
+                if player.Character and player.Character:FindFirstChild('Head') then
+                    local BillboardGui = Instance.new("BillboardGui")
+                    local TextLabel = Instance.new("TextLabel")
+                    BillboardGui.Adornee = player.Character.Head
+                    BillboardGui.Name = player.Name
+                    BillboardGui.Parent = ESPholder
+                    BillboardGui.Size = UDim2.new(0, 100, 0, 150)
+                    BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
+                    BillboardGui.AlwaysOnTop = true
+                    TextLabel.Parent = BillboardGui
+                    TextLabel.BackgroundTransparency = 1
+                    TextLabel.Position = UDim2.new(0, 0, 0, -50)
+                    TextLabel.Size = UDim2.new(0, 100, 0, 100)
+                    TextLabel.Font = Enum.Font.SourceSansSemibold
+                    TextLabel.TextSize = 17
+                    TextLabel.TextColor3 = Color3.new(12, 4, 20)
+                    TextLabel.TextStrokeTransparency = 0.3
+                    TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+                    TextLabel.Text = '@'..player.Name .. ' | ' .. player.DisplayName
+                    TextLabel.ZIndex = 10
+                end
+            end
+        end)
+    end
+
+    -- Apply ESP to all players initially
+    CreateAllHighlight()
+    UpdateAllHighlights()
+
+    -- Loop through all players and set up their ESP and respawn handling
+    for _, player in pairs(Players:GetChildren()) do
+        SetupESPForPlayer(player)
+    end
+
+    -- Listen for new players joining the game and set up their ESP
+    Players.PlayerAdded:Connect(function(player)
+        SetupESPForPlayer(player)
+    end)
+end)
+
+-- Command to disable ESP
+cmd.add({"unesp"}, {"unesp", "Disables esp"}, function()
+    ESPenabled = false -- Set ESPenabled flag to false
+    for _, player in ipairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local highlight = character:FindFirstChild("Highlight")
+            if highlight then
+                highlight:Destroy()
+            end
+        end
+    end
+	
  game.Players.PlayerAdded:Connect(function(player)
 	 player.CharacterAdded:Connect(function(character)
 		 local highlight = character:FindFirstChild("Highlight")
